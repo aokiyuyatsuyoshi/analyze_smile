@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1028416657389",
+    "project_id": "analyze-9ef22",
+    "storage_bucket": "analyze-9ef22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028416657389:android:8cca950329bc36cfb9b9e4",
+        "android_client_info": {
+          "package_name": "com.example.analysis_smile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028416657389-tkv572tc5j57qnclb0e1jh6d26vcp31q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMR4lBjgng6HSVHw_2UGOjvpD-33zoImA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028416657389-tkv572tc5j57qnclb0e1jh6d26vcp31q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1028416657389-5nm9487u8stuif3l3dp47l30qpljj72c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.analysisSmile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
