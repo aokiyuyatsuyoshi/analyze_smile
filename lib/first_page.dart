@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-
-import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
-import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,10 +8,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'history.dart';
 
 void main() async {
-  //firebaseの設定の初期化にこの辺必要
+  ///firebaseの設定の初期化にこの辺必要
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  //ここまで
+
+  ///ここまで
   runApp(first_page());
 }
 
@@ -46,7 +41,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ///状態を表示する（読み込み中やら失敗から）
   String Message = "";
+
+  ///trueの時にダイアログを表示
   bool spinner_flag = false;
+
+  ///顔が認識できた時にtrue
+  bool face_exist = true;
 
   ///MLkitに必要なやつ(顔の検出に必要なやつ)
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector(
@@ -72,6 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ///この関数が呼び出された場合に表示
     setState(() {
       Message = "starting analyze...";
+
+      ///ダイアログを表示するためにflag
       spinner_flag = true;
     });
 
@@ -114,6 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     ///一つ以上の顔が存在すれば（画像の中に１つ以上の顔がある）
     if (faces.length > 0) {
+      ///顔が認識できた場合true
+      face_exist = true;
+
       ///facesのレファレンス(参照先を指定する。この場合storage内のfacesフォルダに格納する)
       final ref = storage.ref().child('faces').child(imageFile.path);
 
@@ -121,24 +126,18 @@ class _MyHomePageState extends State<MyHomePage> {
       final StorageTaskSnapshot snapshot =
           await ref.putFile(imageFile).onComplete;
 
-      print("debug 1");
-
       ///ストレージ保存に失敗した場合
       if (snapshot.error != null) {
         print("error is occured, perhaps, in storage.");
-        print("debug 2");
       }
 
       ///成功した場合はダウンロードURLと画像内で最も大きい顔の情報を取得
       else {
-        print("debug 3");
-
         ///ダウンロードURLを取得する
         final downloadURL = await snapshot.ref.getDownloadURL();
 
         ///最も大きい顔のデータを取得する
         Face largestFace = findLargestFace(faces);
-        print("debug 4");
 
         ///firestoreにデータを挿入する
         FirebaseFirestore.instance.collection("smiles").add({
@@ -146,19 +145,22 @@ class _MyHomePageState extends State<MyHomePage> {
           "image_url": downloadURL,
           "date": Timestamp.now(),
         });
-        print("smile prob is ");
-        print(largestFace.smilingProbability);
       }
       setState(() {
+        ///メッセージとダイアログのflagを削除
         Message = "";
         spinner_flag = false;
       });
 
+      ///history()に遷移
       Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => history(),
           ));
+    } else {
+      ///顔が認識できなかった場合
+      face_exist = false;
     }
   }
 
@@ -201,6 +203,67 @@ class _MyHomePageState extends State<MyHomePage> {
                       File ImageFile =
                           await GetImage(context, ImageSource.gallery);
                       await FindFace(context, ImageFile);
+
+                      if (face_exist == false) {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(
+                                '顔を検出することができませんでした。',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              actions: <Widget>[
+                                RaisedButton(
+                                  child: Text(
+                                    "閉じる",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  elevation: 16.0,
+                                  color: Colors.orange.withOpacity(0.8),
+                                  splashColor: Colors.blue,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else if (face_exist == true) {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(
+                                '分析が完了しました。',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              actions: <Widget>[
+                                RaisedButton(
+                                  child: Text(
+                                    "閉じる",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  elevation: 16.0,
+                                  color: Colors.orange.withOpacity(0.8),
+                                  splashColor: Colors.blue,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        face_exist = false;
+                      }
                     },
                   ),
                 ),
