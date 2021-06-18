@@ -1,16 +1,48 @@
-# analysis_smile
+# 仕様書
+### 作者
+青木優弥
+### アプリ名
+analyze_smile
 
-A new Flutter application.
+##はじめに
+これはMikitの練習に使用。
+あまりアーキテクチャなどに拘っていない。
 
-## Getting Started
+#### こだわったポイント
+- シンプルかつ使いやすいデザインへ
+- ギャラリーからもカメラからも画像をインポートできる
 
-This project is a starting point for a Flutter application.
+## 開発環境
+### 開発環境
+Android Studio 4.0
 
-A few resources to get you started if this is your first Flutter project:
+### 開発言語
+flutter 2.0.5
+dart 2.12.3
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 動作対象端末・OS
+### 動作対象OS
+ios 14.3
+実機未確認
+
+## アプリケーション機能
+
+### 機能一覧
+
+- 笑顔の数値化 :　MLKitを使用して画像から顔を認識し、その顔の笑顔を数値化する。
+
+
+
+### 画面一覧
+- 選択画面 ：ギャラリーもしくはカメラから写真を取得。履歴も閲覧可能。
+- 結果画面 ：画像と分析結果を表示
+
+### 使用しているAPI,SDK,ライブラリなど
+- image_picker
+- firebase_core
+- firebase_ml_vision
+- cloud_firestore
+- firebase_storage
+
+
