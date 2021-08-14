@@ -1,26 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class MyAIApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "history",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: history(),
-    );
-  }
-}
-
-class history extends StatefulWidget {
-  @override
-  _MainFormState createState() => _MainFormState();
-}
-
-class _MainFormState extends State<history> {
+class history extends HookWidget {
   //投稿内容
   Widget _context(double probably) {
     ///数値をパーセンテージにする
